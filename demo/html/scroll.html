@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/demo/css/g.css" />
+    <style>
+      #match-conter {
+        width: 100vw;
+        height: 100vh;
+        overflow-y: hidden;
+      }
+      .scroll-wrap {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="match-conter">
+        <my-scroll>
+          <match-item
+            v-for="match in matchListCard"
+            ::key="match.mid"
+            :match="match"
+          ></match-item>
+        </my-scroll>
+      </div>
+    </div>
+  </body>
+  <script src="/demo/js/vue3.js"></script>
+  <script>
+    const getViewoort = (ele = new Element()) => ele.getBoundingClientRect();
+    const { ref, createApp, computed, onMounted, nextTick } = Vue;
+
+    const app = createApp({
+      setup() {
+        const getH = () => Math.floor(Math.random() * 10) * 160;
+        document.ge;
+        const matchListCard = ref([
+          { mid: "0101", height: getH() },
+          { mid: "0202", height: getH() },
+          { mid: "0303", height: getH() },
+          { mid: "0404", height: getH() },
+          { mid: "0505", height: getH() },
+          { mid: "0606", height: getH() },
+          { mid: "0707", height: getH() },
+          { mid: "0808", height: getH() },
+          { mid: "0909", height: getH() },
+          { mid: "1010", height: getH() },
+        ]);
+        return { matchListCard };
+      },
+    });
+    app.component("my-scroll", {
+      template: `<div class="scroll-wrap" @scroll="scroll">
+                   <slot></slot>
+                 </div>`,
+      setup() {
+        const scroll = (e) => {
+          console.log(e.target.scrollTop);
+        };
+        return { scroll };
+      },
+    });
+    app.component("match-item", {
+      template: `<div class="match-item" :style="{height: match.height + 'px'}">
+        {{match.mid}}
+         </div>`,
+      props: {
+        match: {
+          default: () => ({}),
+          tepe: Object,
+        },
+      },
+      setup(props) {
+        const scroll = (e) => {
+          console.log(e.scrollTop);
+        };
+        const match = computed(() => props.match);
+        return { scroll, match };
+      },
+    });
+    app.mount("#app");
+    const throttle = (fun, otpions = { time: 1000 }) => {
+      let timer = null;
+      return (...arg) => {
+        if (timer) clearTimeout(timer);
+        let { time } = otpions;
+        timer = setTimeout(() => fun(...arg), time);
+      };
+    };
+    const fun1 = () => console.log("1111");
+    let _fun1 = throttle(fun1);
+    const jitter = (fun, otpions = { time: 1000 }) => {
+      let timer = null;
+      return (...arg) => {
+        let { time } = otpions;
+        if (!timer) {
+          timer = setTimeout(() => {
+            fun(...arg);
+            clearTimeout(timer);
+            timer = null;
+          }, time);
+        }
+      };
+    };
+    let _fun2 = jitter(fun1, { time: 2000 });
+    let obj100 = {
+      a: 1,
+      b: 2,
+    };
+    for (const [key, value] of Object.entries(obj100)) {
+      console.log(key, value);
+    }
+  </script>
+</html>

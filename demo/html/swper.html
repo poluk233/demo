@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <style>
+      .swiper {
+        margin: 0 20px;
+        width: calc(100vw -40px);
+      }
+      .swiper-slide {
+        border-radius: 30px;
+      }
+      .img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Slider main container -->
+      <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide">
+            <img
+              class="img"
+              src="https://s3.doneme.xyz/onegame-zh/64bb533be4b0ee148b307c72.jpg"
+              alt=""
+              srcset=""
+            />
+          </div>
+          <div class="swiper-slide">
+            <img
+              class="img"
+              src="https://s3.doneme.xyz/onegame-zh/64bb536ae4b0ee148b307c74.jpg"
+              alt=""
+              srcset=""
+            />
+          </div>
+          <div class="swiper-slide">
+            <img
+              class="img"
+              src="https://s3.doneme.xyz/onegame-zh/64bb532ee4b0ee148b307c71.jpg"
+              alt=""
+              srcset=""
+            />
+          </div>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <!-- <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div> -->
+
+        <!-- If we need scrollbar -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </div>
+    </div>
+  </body>
+  <script>
+    const swiper = new Swiper(".swiper", {
+      // Optional parameters
+      //   effect: 'cards',
+      direction: "horizontal",
+      //   loop: true,
+      autoplay: {
+        delay: 3000,
+      },
+      // If we need pagination
+      pagination: {
+        el: ".swiper-pagination",
+      },
+
+      // Navigation arrows
+      //   navigation: {
+      //     nextEl: ".swiper-button-next",
+      //     prevEl: ".swiper-button-prev",
+      //   },
+
+      //   // And if we need scrollbar
+      //   scrollbar: {
+      //     el: ".swiper-scrollbar",
+      //   },
+    });
+  </script>
+</html>

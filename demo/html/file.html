@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .filelabel {
+        width: 120px;
+        height: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <label class="filelabel" for="xlsx">
+        <button class="btn">111</button>
+        <input
+          type="file"
+          accept="image/png,image/jpeg"
+          style="display: none"
+          name="xlsx"
+          id="xlsx"
+        />
+        <img src="" alt="" class="upload" srcset="" />
+      </label>
+    </div>
+  </body>
+  <script>
+    const btn = document.querySelector(".btn");
+    const fileInput = document.querySelector("#xlsx");
+    const img = document.querySelector(".upload");
+    btn.onclick = (e) => {
+      fileInput.click();
+    };
+    fileInput.onchange = (e) => {
+      readFile(e.target.files[0], (e) => {
+       img.src = e
+      });
+    };
+    const readFile = (file, callBack) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        callBack(e.target.result);
+      };
+    };
+  </script>
+</html>

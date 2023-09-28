@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <button class="btn">导出</button>
+    </div>
+  </body>
+  <script
+    lang="javascript"
+    src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"
+  ></script>
+  <script>
+    const table = [
+      { name: "George Washington", birthday: "1732-02-22" },
+      { name: "John Adams", birthday: "1735-10-19" },
+      // ... one row per President
+    ];
+    const downExcel = (rows) => {
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Dates");
+      XLSX.utils.sheet_add_aoa(
+        worksheet,
+        [
+         ,
+        ],
+        { origin: "A1" }
+      );
+      XLSX.writeFile(workbook, "Presidents.xlsx", { compression: true });
+    };
+    let a ={
+        report_time:dayjs(row.report_time).format('YYYY-MM-DD'),
+        cid:row.cid,
+        cname:row.cname,
+        uid:row.uid,
+        username:row.username,
+        total_commissions:row.total_commissions,
+        total_team_num:row.total_team_num,
+        deposit_withdraw_diff:row.deposit_withdraw_diff,
+        deposit_mem_count:row.deposit_mem_count,
+        deposit_amount:row.deposit_amount,
+        withdraw_amount:row.withdraw_amount,
+        direct_push_num:row.direct_push_num,
+        direct_push_deposit_num:row.direct_push_deposit_num,
+        direct_push_fd_amount:row.direct_push_fd_amount,
+        direct_push_fd_bonus:row.direct_push_fd_bonus,
+        direct_push_deposit:row.direct_push_deposit,
+        direct_push_withdraw_amount:row.direct_push_withdraw_amount,
+        direct_push_flow:row.direct_push_flow,
+        direct_push_flow_bonus:row.direct_push_flow_bonus,
+        direct_push_dw_diff:row.direct_push_dw_diff,
+        lvl_second_num:row.lvl_second_num,
+        lvl_second_deposit_num:row.lvl_second_deposit_num,
+        lvl_second_fd_amount:row.lvl_second_fd_amount,
+        lvl_second_fd_bonus:row.lvl_second_fd_bonus,
+        lvl_second_deposit_amount:row.lvl_second_deposit_amount,
+        lvl_second_withdraw_amount:row.lvl_second_withdraw_amount,
+        lvl_second_flow:row.lvl_second_flow,
+        lvl_second_flow_bonus:row.lvl_second_flow_bonus,
+        lvl_second_dw_diff:row.lvl_second_dw_diff,
+        lvl_three_num:row.lvl_three_num,
+        lvl_three_deposit_num:row.lvl_three_deposit_num,
+        lvl_three_fd_amount:row.lvl_three_fd_amount,
+        lvl_three_fd_bonus:row.lvl_three_fd_bonus,
+        lvl_three_deposit_amount:row.lvl_three_deposit_amount,
+        lvl_three_withdraw_amount:row.lvl_three_withdraw_amount,
+        lvl_three_flow:row.lvl_three_flow,
+        lvl_three_flow_bonus:row.lvl_three_flow_bonus,
+        lvl_three_dw_diff:row.lvl_three_dw_diff,
+        created_ip:row.created_ip,
+        typeName:row.cid === '0' ? t('routes.agent.nationalAgent') : t('routes.agent.channelAgent'),
+        created_at:dayjs(row.created_at).format('YYYY-MM-DD'),
+    }
+    document.querySelector(".btn").addEventListener("click", () => {
+      downExcel(table);
+    });
+  </script>
+</html>

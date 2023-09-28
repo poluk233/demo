@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script>
+    const setrem = (...arg) => {
+      let ele = document.documentElement || document.body;
+      let { width } = ele.getBoundingClientRect();
+      let rem = (width / 375) * 16;
+      if (width > 600) {
+        rem = 16;
+      }
+      ele.style.fontSize = `${rem}px`;
+    };
+    window.addEventListener("resize", setrem);
+    window.addEventListener("load", setrem);
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      outline: none;
+    }
+    /* * ::-webkit-scrollbar {
+      display: none;
+    } */
+    #app {
+      font-size: 2rem;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #container {
+      width: 100vw;
+      height: 100vh;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      margin: 0 auto;
+
+      /* grid-column-gap:20px; */
+      /* grid-row-gap: 20px; */
+    }
+    .grid {
+      display: grid;
+      grid-template-rows: 85px 85px;
+      grid-column-gap: 5px;
+      grid-auto-flow: column;
+      /* grid-column-gap: 1.6vw;
+      grid-row-gap: 1.6vw; */
+      /* scroll-snap-type: x mandatory; */
+      overflow: auto;
+      align-items: start;
+      justify-items: start;
+    }
+    .btn-wrap {
+      position: fixed;
+      right: 5px;
+      top: 20px;
+    }
+    .text {
+      width: 80px;
+      height: 80px;
+      background-color: skyblue;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <div class="btn-wrap">
+        <button class="btn">暂停自动往上滚</button>
+      </div>
+      <div id="container">
+        <div class="grid"></div>
+      </div>
+    </div>
+  </body>
+  <script></script>
+  <script>
+    class Stimer {
+      run = false;
+      to = true;
+      constructor(callBack, wait = 1000) {
+        (this.timer = null), (this.callBack = callBack);
+        this.wait = wait;
+        this.start();
+      }
+      start() {
+        this.run = true;
+        this.timer = setInterval(() => {
+          this.run && this.callBack && this.callBack();
+        }, this.wait);
+      }
+    }
+
+    const c = document.querySelector(".grid");
+    const created = (text) => {
+      // const app = document.getElementById("app");
+      let div = document.createElement("div");
+      div.setAttribute("class", "text");
+      div.innerHTML = String(text);
+      c.appendChild(div);
+      let { height } = div.getBoundingClientRect();
+      //  timer.to &&
+      //     c.scrollTo({
+      //       top: c.scrollTop + height,
+      //       behavior: "smooth",
+      //     });
+    };
+    const callBack = () => {
+      let text = 1;
+      return () => {
+        created(text);
+        text++;
+      };
+    };
+    for (let i = 0; i < 20; i++) {
+      created(i);
+    }
+    // const timer = new Stimer(callBack());
+    // document.addEventListener("visibilitychange", () => {
+    //   console.log(document.visibilityState);
+    //   if (document.visibilityState === "visible") {
+    //     timer.run = true;
+    //   } else {
+    //     timer.run = false;
+    //   }
+    // });
+    // document.querySelector(".btn").onclick = () => {
+    //   timer.to = !timer.to;
+    // };
+
+  </script>
+</html>

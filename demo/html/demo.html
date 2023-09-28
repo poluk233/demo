@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/demo/css/g.css">
+    <style>
+      #content {
+        width: 100%;
+        height: 200px;
+        overflow: auto;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .flex {
+        display: flex;
+        border: 1px solid #f0f;
+        height: 400px;
+        justify-content: center;
+        align-items: center;
+      }
+      .flex-col {
+        flex-direction: column;
+      }
+      /* @keyframes scroll {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(var(--qq--sroll--height));
+        }
+      }
+      .wrap {
+        animation: var(--qq--sroll--time) linear 0.5s infinite running scroll;
+      }
+      .wrap:hover {
+        animation-play-state: paused;
+      } */
+      .item {
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        text-align: left;
+        background-color: skyblue;
+        border-radius: 6px;
+        margin-bottom: 5px;
+      }
+      .flex-item {
+        width: 100%;
+        height: 40px;
+        background-color: blueviolet;
+        margin-bottom: 5px;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="content" ref="content" @click="set_status">
+        <div class="wrap">
+          <div class="item" v-for="(item,i) in list" :key="i">
+            {{item.value}}
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex-item" v-for="item in 5" :key="item">{{ item }}</div>
+      </div>
+      <a href="http://localhost:5173/">2222</a>
+    </div>
+    <script src="/demo/js/vue3.js"></script>
+  </body>
+  <script>
+    function* Iterator(arr = []) {
+      for (let i = 0; i < arr.length; i++) {
+        yield arr[i];
+      }
+    }
+    let arr = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }];
+    const myIterator = Iterator(arr);
+  </script>
+  <script>
+    let data = [];
+    const bigSamll = (num = 0) => {
+      return num < 10 ? `0${num}` : num;
+    };
+    const createdData = (num) => {
+      let data = [];
+      for (let i = 1; i < num + 1; i++) {
+        let item = {
+          id: i,
+          value: `${bigSamll(i)}-${bigSamll(i)}`,
+        };
+        data.push(item);
+      }
+      return data;
+    };
+    data = createdData(200);
+    const simulationPromise = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(data);
+        }, 120);
+      });
+    };
+    const { ref, createApp, onMounted, nextTick } = Vue;
+    const app = createApp({
+      setup() {
+        const list = ref([]);
+        const content = ref(null);
+        let  scrollTop = 0
+        let pause = false;
+        let RAF = 0;
+        let AnimationFrameId = null;
+        const getmassagelist = async () => {
+          let data = await simulationPromise();
+          list.value = data;
+          nextTick(() => {
+            startScroll();
+          });
+        };
+        const set_status = () => {
+          pause = !pause;
+        };
+        const startScroll = () => {
+          let firstItem = document.querySelector(".item");
+          let { height } = firstItem.getBoundingClientRect();
+          let { marginBottom } = window.getComputedStyle(firstItem);
+          let margin = +marginBottom.slice(0, marginBottom.length - 2);
+          scrollTop = content.value.scrollTop;
+          const scroll = () => {
+            if (pause) return;
+            let items = document.querySelectorAll(".item");
+            let total = items.length;
+            let index = Math.floor(total / 2);
+            let itemHeight = index * (height + margin) + 5;
+            scrollTop += 0.5;
+            console.log(scrollTop);
+            if (scrollTop > itemHeight) {
+              let removeEles = list.value.splice(0, index);
+              list.value = [...list.value, ...removeEles];
+              scrollTop = 0;
+            }
+            content.value.scrollTop = scrollTop;
+            AnimationFrameId = requestAnimationFrame(scroll);
+          };
+          scroll();
+        };
+
+        const set_run_status = () => {
+          pause = true;
+        };
+        onMounted(() => {
+          getmassagelist();
+        });
+        return { list, content, set_status };
+      },
+    });
+    app.mount("#app");
+    class Animal {
+      name = "";
+      constructor(name) {
+        this.name = name;
+      }
+    }
+    Animal.prototype.say =function () {
+      console.log(this.name,"22222");
+    };
+    let dog =new Animal("大黄")
+    dog.say()
+    console.log(dog)
+  </script>
+</html>
