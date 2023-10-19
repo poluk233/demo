@@ -82,7 +82,7 @@
   <script></script>
   <script>
     class Stimer {
-      run = false;
+      #run = false;
       to = true;
       constructor(callBack, wait = 1000) {
         (this.timer = null), (this.callBack = callBack);
@@ -90,10 +90,16 @@
         this.start();
       }
       start() {
-        this.run = true;
+        this.#run = true;
         this.timer = setInterval(() => {
-          this.run && this.callBack && this.callBack();
+          this.#run && this.callBack && this.callBack();
         }, this.wait);
+      }
+      set run(value){
+        this.#run = value
+      }
+      get run(){
+        return this.#run
       }
     }
 
@@ -104,12 +110,17 @@
       div.setAttribute("class", "text");
       div.innerHTML = String(text);
       c.appendChild(div);
-      let { height } = div.getBoundingClientRect();
+      let { height ,width} = div.getBoundingClientRect();
       //  timer.to &&
       //     c.scrollTo({
       //       top: c.scrollTop + height,
       //       behavior: "smooth",
       //     });
+         timer.to &&
+          c.scrollTo({
+            left: c.scrollLeft + width,
+            behavior: "smooth",
+          });
     };
     const callBack = () => {
       let text = 1;
@@ -118,21 +129,20 @@
         text++;
       };
     };
-    for (let i = 0; i < 20; i++) {
-      created(i);
-    }
-    // const timer = new Stimer(callBack());
-    // document.addEventListener("visibilitychange", () => {
-    //   console.log(document.visibilityState);
-    //   if (document.visibilityState === "visible") {
-    //     timer.run = true;
-    //   } else {
-    //     timer.run = false;
-    //   }
-    // });
-    // document.querySelector(".btn").onclick = () => {
-    //   timer.to = !timer.to;
-    // };
-
+    // for (let i = 0; i < 20; i++) {
+    //   created(i);
+    // }
+    const timer = new Stimer(callBack());
+    document.addEventListener("visibilitychange", () => {
+      console.log(document.visibilityState);
+      if (document.visibilityState === "visible") {
+        timer.run = true;
+      } else {
+        timer.run = false;
+      }
+    });
+    document.querySelector(".btn").onclick = () => {
+      timer.to = !timer.to;
+    };
   </script>
 </html>

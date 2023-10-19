@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="/demo/css/g.css">
-    <style>
-      #content {
-        width: 100%;
-        height: 200px;
-        overflow: auto;
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-      .flex {
-        display: flex;
-        border: 1px solid #f0f;
-        height: 400px;
-        justify-content: center;
-        align-items: center;
-      }
-      .flex-col {
-        flex-direction: column;
-      }
-      /* @keyframes scroll {
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/demo/css/g.css">
+  <style>
+    #content {
+      width: 100%;
+      height: 200px;
+      overflow: auto;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .flex {
+      display: flex;
+      border: 1px solid #f0f;
+      height: 400px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .flex-col {
+      flex-direction: column;
+    }
+
+    /* @keyframes scroll {
         from {
           transform: translateY(0);
         }
@@ -37,140 +41,197 @@
       .wrap:hover {
         animation-play-state: paused;
       } */
-      .item {
-        font-size: 16px;
-        line-height: 40px;
-        height: 40px;
-        text-align: left;
-        background-color: skyblue;
-        border-radius: 6px;
-        margin-bottom: 5px;
-      }
-      .flex-item {
-        width: 100%;
-        height: 40px;
-        background-color: blueviolet;
-        margin-bottom: 5px;
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-      
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <div id="content" ref="content" @click="set_status">
-        <div class="wrap">
-          <div class="item" v-for="(item,i) in list" :key="i">
-            {{item.value}}
-          </div>
+    .item {
+      font-size: 16px;
+      line-height: 40px;
+      height: 40px;
+      text-align: left;
+      background-color: skyblue;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+
+    .flex-item {
+      width: 100%;
+      height: 40px;
+      background-color: blueviolet;
+      margin-bottom: 5px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .title {
+      height: 60px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div id="content" ref="content" @click="set_status">
+      <div class="wrap">
+        <div class="item" v-for="(item,i) in list" :key="i">
+          {{item.value}}
         </div>
       </div>
-      <div class="flex flex-col">
-        <div class="flex-item" v-for="item in 5" :key="item">{{ item }}</div>
-      </div>
-      <a href="http://localhost:5173/">2222</a>
     </div>
-    <script src="/demo/js/vue3.js"></script>
-  </body>
-  <script>
-    function* Iterator(arr = []) {
-      for (let i = 0; i < arr.length; i++) {
-        yield arr[i];
-      }
+    <div class="flex flex-col ">
+      <div class="flex-item" v-for="item in 5" :key="item">{{ item }}</div>
+    </div>
+    <div class="tlw_sponsor_title  title">
+      222
+    </div>
+  </div>
+  <script src="/demo/js/vue3.js"></script>
+</body>
+<script>
+  function* Iterator(arr = []) {
+    for (let i = 0; i < arr.length; i++) {
+      yield arr[i];
     }
-    let arr = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }];
-    const myIterator = Iterator(arr);
-  </script>
-  <script>
+  }
+  let arr = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }];
+  const myIterator = Iterator(arr);
+</script>
+<script>
+  let data = [];
+  const bigSamll = (num = 0) => {
+    return num < 10 ? `0${num}` : num;
+  };
+  const createdData = (num) => {
     let data = [];
-    const bigSamll = (num = 0) => {
-      return num < 10 ? `0${num}` : num;
-    };
-    const createdData = (num) => {
-      let data = [];
-      for (let i = 1; i < num + 1; i++) {
-        let item = {
-          id: i,
-          value: `${bigSamll(i)}-${bigSamll(i)}`,
-        };
-        data.push(item);
-      }
-      return data;
-    };
-    data = createdData(200);
-    const simulationPromise = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(data);
-        }, 120);
-      });
-    };
-    const { ref, createApp, onMounted, nextTick } = Vue;
-    const app = createApp({
-      setup() {
-        const list = ref([]);
-        const content = ref(null);
-        let  scrollTop = 0
-        let pause = false;
-        let RAF = 0;
-        let AnimationFrameId = null;
-        const getmassagelist = async () => {
-          let data = await simulationPromise();
-          list.value = data;
-          nextTick(() => {
-            startScroll();
-          });
-        };
-        const set_status = () => {
-          pause = !pause;
-        };
-        const startScroll = () => {
-          let firstItem = document.querySelector(".item");
-          let { height } = firstItem.getBoundingClientRect();
-          let { marginBottom } = window.getComputedStyle(firstItem);
-          let margin = +marginBottom.slice(0, marginBottom.length - 2);
-          scrollTop = content.value.scrollTop;
-          const scroll = () => {
-            if (pause) return;
-            let items = document.querySelectorAll(".item");
-            let total = items.length;
-            let index = Math.floor(total / 2);
-            let itemHeight = index * (height + margin) + 5;
-            scrollTop += 0.5;
-            console.log(scrollTop);
-            if (scrollTop > itemHeight) {
-              let removeEles = list.value.splice(0, index);
-              list.value = [...list.value, ...removeEles];
-              scrollTop = 0;
-            }
-            content.value.scrollTop = scrollTop;
-            AnimationFrameId = requestAnimationFrame(scroll);
-          };
-          scroll();
-        };
-
-        const set_run_status = () => {
-          pause = true;
-        };
-        onMounted(() => {
-          getmassagelist();
-        });
-        return { list, content, set_status };
-      },
-    });
-    app.mount("#app");
-    class Animal {
-      name = "";
-      constructor(name) {
-        this.name = name;
-      }
+    for (let i = 1; i < num + 1; i++) {
+      let item = {
+        id: i,
+        value: `${bigSamll(i)}-${bigSamll(i)}`,
+      };
+      data.push(item);
     }
-    Animal.prototype.say =function () {
-      console.log(this.name,"22222");
-    };
-    let dog =new Animal("大黄")
-    dog.say()
-    console.log(dog)
-  </script>
+    return data;
+  };
+  const simulationPromise = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(createdData(10));
+      }, 120);
+    });
+  };
+  const { ref, createApp, onMounted, nextTick } = Vue;
+  const app = createApp({
+    setup() {
+      const list = ref([]);
+      const content = ref(null);
+      let scrollTop = 0
+      let pause = false;
+      let RAF = 0;
+      let AnimationFrameId = null;
+      const getmassagelist = async () => {
+        let data = await simulationPromise();
+        list.value = data;
+        nextTick(() => {
+          startScroll();
+        });
+      };
+      const set_status = () => {
+        pause = !pause;
+      };
+      const startScroll = () => {
+        let firstItem = document.querySelector(".item");
+        let { height } = firstItem.getBoundingClientRect();
+        let { marginBottom } = window.getComputedStyle(firstItem);
+        let margin = +marginBottom.slice(0, marginBottom.length - 2);
+        let scrollTop = content.value.scrollTop;
+        let { height: content_h } = content.value.getBoundingClientRect()
+        let { height: wrap_h } = document.querySelector(".wrap").getBoundingClientRect()
+        const scroll = () => {
+          let total = list.value.length;
+          if (pause || wrap_h < content_h) return;
+          let index = Math.floor(total / 2);
+          scrollTop += 0.5;
+          if (scrollTop > wrap_h + 5 - content_h) {
+            let removeEles = list.value.splice(0, Math.floor(scrollTop / (wrap_h / total)));
+            list.value.push(...removeEles)
+            scrollTop = 5;
+          }
+          content.value.scrollTop = scrollTop;
+          AnimationFrameId = requestAnimationFrame(scroll);
+        };
+        scroll();
+      };
+
+      const set_run_status = () => {
+        pause = true;
+      };
+      onMounted(() => {
+        getmassagelist();
+      });
+      return { list, content, set_status, };
+    },
+  });
+  app.mount("#app");
+
+
+  let arr1 = [
+    { id: '1', name: '存款', en_name: 'Deposit' },
+    { id: '2', name: '提现', en_name: 'WithDraw' },
+    { id: '3', name: '线下转卡存款', en_name: 'OfflineDeposit' },
+    { id: '4', name: 'USDT线下存款', en_name: 'USDTOfflineDeposit' },
+    { id: '5', name: '存款手续费', en_name: 'DepositFee' },
+    { id: '6', name: '存款优惠', en_name: 'DepositBonus' },
+    { id: '7', name: '财务下分', en_name: 'FinanceDownPoint' },
+    { id: '8', name: '提现失败', en_name: 'WithDrawFail' },
+    { id: '9', name: '提现手续费', en_name: 'WithdrawalFee' },
+    { id: '10', name: '提现手续费返还', en_name: 'WithdrawalFeeRem' },
+    { id: '11', name: '手动出款', en_name: 'HandWithdrawal' },
+    { id: '101', name: '后台上分', en_name: 'UpPoint' },
+    { id: '102', name: '后台下分', en_name: 'DownPoint' },
+    { id: '103', name: '后台下分回退', en_name: 'DownPointBack' },
+    { id: '104', name: '中心钱包余额冲正', en_name: 'SetBalanceZero' },
+    { id: '105', name: '中心钱包红利派发', en_name: 'Dividend' },
+    { id: '201', name: '会员返水', en_name: 'Rebate' },
+    { id: '202', name: '佣金提取', en_name: 'CommissionDraw' },
+    { id: '203', name: '下级返水(1级)', en_name: 'SubRebateLv1' },
+    { id: '204', name: '下级返水(2级)', en_name: 'SubRebateLv2' },
+    { id: '205', name: '下级返水(3级)', en_name: 'SubRebateLv3' },
+    { id: '301', name: 'vip晋级礼金', en_name: 'VIPUpgrade' },
+    { id: '302', name: 'vip月红包', en_name: 'VIPMonthly' },
+    { id: '303', name: 'vip生日礼金', en_name: 'VIpBirthday' },
+    { id: '304', name: '首存活动红利', en_name: 'FirstDepositDividend' },
+    { id: '305', name: '邀请好友红利', en_name: 'InviteDividend' },
+    { id: '306', name: '天天签到活动红利', en_name: 'SignDividend' },
+    { id: '307', name: '宝箱活动红利', en_name: 'TreasureDividend' },
+    { id: '308', name: '周投注活动', en_name: 'WeeklyDividend' },
+    { id: '401', name: '投注', en_name: 'Bet' },
+    { id: '402', name: '投注取消', en_name: 'BetCancel' },
+    { id: '403', name: '派彩', en_name: 'Payout' },
+    { id: '404', name: '重新结算加币', en_name: 'ResettlePlus' },
+    { id: '405', name: '重新结算减币', en_name: 'ResettleDeduction' },
+    { id: '406', name: '取消派彩', en_name: 'CancelPayout' },
+    { id: '407', name: '投注取消(已结算注单)', en_name: 'SettledBetCancel' },
+    { id: '408', name: '已取消注单回滚', en_name: 'CancelledBetRollback' },
+    { id: '409', name: '电子投付赢', en_name: 'BetNSettleWin' },
+    { id: '410', name: '电子投付输', en_name: 'BetNSettleLose' },
+    { id: '411', name: '投付赢取消', en_name: 'BetNSettleWinCancel' },
+    { id: '412', name: '投付输取消', en_name: 'BetNSettleLoseCancel' },
+    { id: '413', name: '场馆调整加', en_name: 'AdjustPlus' },
+    { id: '414', name: '场馆调整减', en_name: 'AdjustDiv' },
+    { id: '415', name: '场馆活动派彩', en_name: 'PromoPayout' },
+    { id: '416', name: '游戏奖金(EVO)', en_name: 'EVOPrize' },
+    { id: '417', name: '推广(EVO)', en_name: 'EVOPromote' },
+    { id: '418', name: '头奖(EVO)', en_name: 'EVOJackpot' },
+    { id: '419', name: '预投注(BTI)', en_name: 'Reserve' },
+    { id: '420', name: '注单资讯(BTI)', en_name: 'DebitReserve' },
+    { id: '421', name: '确认投注(BTI)', en_name: 'CommitReserve' },
+    { id: '422', name: '取消投注(BTI)', en_name: 'CancelReserve' },
+    { id: '423', name: '派彩(BTI)', en_name: 'CreditCustomer' },
+    { id: '424', name: '重新结算(BTI)', en_name: 'DebitCustomer' },
+    { id: '425', name: '免费旋转奖励(PP)', en_name: 'BonusWin' },
+    { id: '426', name: '累积奖金赢奖(PP)', en_name: 'JackPotWin' }
+  ]
+  console.log(arr1.find(item => item.id == "426")?.name ?? 'sbbbb');
+  console.log(arr1.some(item => item.id == "426"));
+  console.log(arr1.reverse());
+</script>
+
 </html>

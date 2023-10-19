@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/demo/css/g.css" />
+    <style>
+        #app {
+            padding: 4px;
+        }
+
+        .flex-wrap {
+            display: flex;
+            overflow-y: scroll;
+            padding-bottom: 5px;
+        }
+
+        .flex-wrap::-webkit-scrollbar {
+            display: none;
+        }
+
+        .item {
+            padding: 0 16px;
+            border: 1px dashed #000;
+            margin-left: 5px;
+        }
+
+        .item:first-child {
+            margin-left: 0px;
+        }
+
+        .grid-wrap {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-row-gap: 5px;
+            grid-column-gap: 8px;
+            width: 100%;
+        }
+
+        .grid-item {
+            background-color: skyblue;
+        }
+
+        .img {
+            height: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="flex-wrap" v-for="wrap in 5" :key="wrap">
+            <div class="item" v-for="item in total" :key="item">{{ item }}</div>
+        </div>
+        <div class="grid-wrap">
+            <div class="grid-item" v-for="item in total" :key="item">
+                <div class="img">{{item}}</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="/demo/js/vue3.js"></script>
+<script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+        setup(props) {
+            const total = ref(100)
+            return {
+                total
+            }
+        }
+    })
+    app.mount("#app")
+
+    let depthObj = [
+        {
+            value: "1",
+            children: [
+                {
+                    value: "1-1",
+                    children: [
+                        { value: "1-1-1" },
+                        { value: "1-1-2" },
+                        { value: "1-1-3" },
+                    ]
+                },
+                {
+                    value: "1-2",
+                    children: [
+                        { value: "1-2-1" },
+                        { value: "1-2-2" },
+                        { value: "1-2-3" },
+                    ]
+                }
+            ]
+        },
+        {
+            value: "2",
+            children: [
+                {
+                    value: "2-1",
+                    children: [
+                        { value: "2-1-1", },
+                        { value: "2-1-2", },
+                        { value: "2-1-3", },
+                    ]
+                },
+                {
+                    value: "2-2",
+                    children: [
+                        { value: "2-2-1", },
+                        { value: "2-2-2", },
+                        { value: "2-2-3", },
+                    ]
+                }
+            ]
+        },
+        {
+            value: "3",
+            children: [
+                {
+                    value: "3-1",
+                    children: [
+                        { value: "3-1-1", },
+                        { value: "3-1-2", },
+                        { value: "3-1-3", },
+                    ]
+                },
+                {
+                    value: "3-2",
+                    children: [
+                        { value: "3-2-1", },
+                        { value: "3-2-2", },
+                        { value: "3-2-3", },
+                    ]
+                }
+            ]
+        },
+    ]
+
+    const loop = (arr = [], type = 1, result = []) => {
+        let stack = []
+        type === 1 ? stack.push(...arr) : stack.push({ children: arr })
+        while (stack.length) {
+            let item = type === 1 ? stack.shift() : stack.pop()
+            let children = item.children || []
+            result.push(item)
+            if (type === 2) {
+                for (let i = children.length - 1; i >= 0; i--) {
+                    stack.push(children[i])
+                }
+            } else {
+                for (let i = 0; i < children.length; i++) {
+                    stack.push(children[i])
+
+                }
+            }
+        }
+        if (type === 2) {
+            delete result[0]
+            result = result.filter(item => item)
+        }
+
+        console.log(result);
+        return result
+    }
+    // loop(depthObj, 1)
+    // loop(depthObj, 2)
+    // console.log(depthObj);
+    const dynamic_menu = ["1", "1-1", "1-1-1", "1-1-3", "2","2-1", "2-1-1", "3", "3-1", "3-1-1", "3-1-2", "3-1-3", "3-2", "3-2-1", "3-2-2", "3-2-3"]
+    const filter_menu_list = (menu_list =[], dynamic_menu = []) => {
+        return menu_list.filter(menu => {
+            if (menu.children) {
+                const children = filter_menu_list(menu.children, dynamic_menu)
+                menu.children = children
+            }
+            console.log(menu.value);
+            return dynamic_menu.includes(menu.value) && (menu.children ? menu.children.length > 0 : true)
+        })
+    }
+    const cur_menu = filter_menu_list(depthObj, dynamic_menu)
+
+</script>
+
+</html>

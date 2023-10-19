@@ -16,6 +16,10 @@
         height: 100%;
         overflow-y: auto;
       }
+      .match-item{
+        border: 1px dashed #000;
+        margin-bottom: 5px;
+      }
     </style>
   </head>
   <body>
@@ -38,8 +42,10 @@
 
     const app = createApp({
       setup() {
-        const getH = () => Math.floor(Math.random() * 10) * 160;
-        document.ge;
+        const getH = () =>{
+          let height = Math.floor(Math.random() * 10) * 160
+          return  height > 0 ?  height : getH()
+        };
         const matchListCard = ref([
           { mid: "0101", height: getH() },
           { mid: "0202", height: getH() },

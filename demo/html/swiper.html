@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/demo/css/g.css" />
+    <title>Document</title>
+    <style>
+        #app {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .swiper-box {
+            width: 100vw;
+            overflow: hidden;
+            height: auto;
+        }
+
+        .swiper {
+            display: flex;
+            height: 100%;
+        }
+
+        .item {
+            width: 100vw;
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: auto;
+        }
+
+        .item>img {
+            width: 100%;
+            height: auto;
+        }
+
+        .list-content {
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+
+        .list-wrap {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 5px;
+            padding: 0 6px;
+        }
+
+        .list-item {
+            height: 60px;
+            background-color: aqua;
+        }
+
+        .list-item.engross {
+            grid-column: 1/ -1;
+        }
+
+        li {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="swiper-box">
+            <div class="swiper">
+                <div class="item">
+                    <img src="https://s3.doneme.xyz/onegame-zh/64bb532ee4b0ee148b307c71.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="https://s3.doneme.xyz/onegame-zh/64bb533be4b0ee148b307c72.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="https://s3.doneme.xyz/onegame-zh/64bb5349e4b0ee148b307c73.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="https://s3.doneme.xyz/onegame-zh/64bb536ae4b0ee148b307c74.jpg" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="list-content">
+            <ul class="list-wrap">
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    const swiper = document.querySelector(".swiper")
+    const count = swiper.children.length
+    let width = document.body.offsetWidth
+    let cur_index = 1
+    let time = 0
+    let y = 0
+    setInterval(() => {
+        if (cur_index === count) {
+            cur_index = 0
+            time = 0
+            y = 0
+        } else {
+            y = cur_index * width
+            time = 0.3
+        }
+        swiper.style.transform = `translate3d(-${y}px,0px,0px)`
+        swiper.style.transitionDuration = `${time}s`
+        cur_index++
+    }, 3000)
+
+    const addelement = (num, col = 0) => {
+        const ul = document.querySelector(".list-wrap")
+        let lis = ""
+        for (let i = 1; i < num + 1; i++) {
+            if (i === col) {
+                lis += `<li class="list-item engross">${i}</li>`
+            } else {
+                lis += `<li class="list-item">${i}</li>`
+            }
+        }
+        ul.innerHTML = lis
+    }
+    addelement(100)
+
+</script>
+
+</html>

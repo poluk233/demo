@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+</body>
+<script type="module">
+  import pubSup from "/demo/js/pubSup.js";
+  import limitRes from "/demo/js/limitRes.js";
+  const sub1 = (e) => {
+    console.log(e);
+  };
+  const sub2 = (e) => {
+    console.log(e, "22222222");
+  };
+  pubSup.$on("sub1", sub1);
+  pubSup.$on("sub1", sub2);
+  // pubSup.$emit("sub1",'趋势')
+  // pubSup.$emit("sub2",'㲲')
+  const createProxy = (values = []) => {
+    return new Proxy(
+      {},
+      {
+        get(taget, p) {
+          if (
+            typeof p === "symbol"
+            // p === Symbol.toPrimitive
+          ) {
+            return () => values.reduce((p, c) => p + c, 0);
+          }
+          return createProxy([...values, +p]);
+        },
+      }
+    );
+  };
+  const add = createProxy();
+  // const r = obj[1][2][3] + 1;
+  console.log(add[1][2][3]);
+  const createdTask = (result) =>()=> new Promise((resolve, reject) => {
+    const time = Math.floor(Math.random() * 5)
+    setTimeout(() => {
+      if (time > 3) {
+        reject(result)
+      } else {
+        resolve(result)
+      }
+    },time*1000)
+  })
+  const createdTaskList = (num = 100) => {
+    let taskList = []
+    for (let index = 1; index < num + 1; index++) {
+      taskList.push(createdTask(index))
+
+    }
+    return taskList
+  }
+  
+  const taskClass = new limitRes(10)
+  taskClass.add(createdTaskList(100))
+  taskClass.start()
+  taskClass.start()
+  taskClass.start()
+  taskClass.start()
+  taskClass.start()
+  taskClass.on=(e)=>{
+    console.log(e);
+    console.log(taskClass);
+  }
+ 
+
+</script>
+
+</html>

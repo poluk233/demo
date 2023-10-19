@@ -1,9 +1,11 @@
-const translate = require(google-translate-cn-api);
+// import translate from 'google-translate-cn-api'
+const  translate = require('google-translate-api');
 
-(async () => {
+( () => {
   // English => Chinese
- const res =  await translate('hello world', { to: 'zh-cn' })
-console.log(res);
+ translate('hello world', { to: 'zh-cn' }).then(res=>{
+  console.log(res);
+ })
 })();
 
 

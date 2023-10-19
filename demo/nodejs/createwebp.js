@@ -5,28 +5,28 @@ import sharp from "sharp";
 const [_path = "/public"] = process.argv.slice(2);
 const cur_path = path.join(process.cwd(), _path);
 
-
-
-
-
-
 const getFilePath = async (dirPath) => {
   let paths = await fs.readdirSync(dirPath);
-  paths.forEach((item) => {
-    const filePath = path.join(dirPath, item);
+  paths.forEach((flie) => {
+    const filePath = path.join(dirPath, flie);
     const stats = fs.lstatSync(filePath);
     if (stats.isDirectory()) {
       getFilePath(filePath);
     } else if (!filePath.endsWith(".webp")) {
-      const webpFilePath = path.join(dirPath, `${item}.webp`);
-        toWebp(webpFilePath, filePath);
-        // toWebp1(filePath, webpFilePath);
+      const webpFilePath = path.join(dirPath, `${flie}.webp`);
+      toWebp(filePath, webpFilePath);
+      // toWebp1(filePath, webpFilePath);
+      console.log(webpFilePath);
     }
   });
 };
 const toWebp = async (dirPath, filePath) => {
   try {
     let res = await webp.cwebp(dirPath, filePath);
+    if(res){
+      console.log(filePath);
+      
+    }
   } catch (error) {
     if (error) {
       console.log(error);
@@ -35,7 +35,6 @@ const toWebp = async (dirPath, filePath) => {
 };
 
 const toWebp1 = (dirPath, filePath) => {
-  console.log(dirPath, filePath);
   sharp(dirPath)
     .toFormat("webp")
     .toFile(filePath, (err) => {
